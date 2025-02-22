@@ -43,6 +43,7 @@ const folderPath = document.getElementById("outputfolder") as HTMLInputElement;
 const selectFile = document.getElementById("selectfile") as HTMLButtonElement;
 const selectFolder = document.getElementById("selectfolder")  as HTMLButtonElement;
 
+stop.disabled = true;
 
 function setDisabled(value: boolean) {
   start.disabled = value;

@@ -18,7 +18,9 @@ function processData(args: FileOutputArgs) {
     writeQualifying(args);
     writeQuickTime(args);
     writeScroling(args);
-    writeTop5(args);
+    writeTop(args, 3);
+    writeTop(args, 5);
+    writeGap(args);
 }
 
 function writeLaps(args: FileOutputArgs) {
@@ -28,8 +30,23 @@ function writeLaps(args: FileOutputArgs) {
         const lapsToGo = data.RACEDATA.SESSION.LAPSTOGO;
         const time = Number(data.RACEDATA.CAR[1].LAG) * -1;
 
-        const output = `Lap: ${lap}/${lap+lapsToGo}\t+${time}\n`;
+        const output = `${lap}\n`;
         const outputPath = path.join(folderPath, 'laps in.txt');
+        console.log(outputPath);
+        fs.writeFileSync(outputPath, output);
+    }   catch(err) {
+        console.log(err);
+    }
+}
+
+function writeGap(args: FileOutputArgs) {
+  const { data, folderPath } = args;
+    try {
+        const time = Number(data.RACEDATA.CAR[1].LAG) * -1;
+
+        const output = `+${time}\n`;
+        const outputPath = path.join(folderPath, 'gap.txt');
+        console.log(outputPath);
         fs.writeFileSync(outputPath, output);
     }   catch(err) {
         console.log(err);
@@ -89,15 +106,16 @@ function writeScroling(args: FileOutputArgs) {
     }
 }
 
-function writeTop5(args: FileOutputArgs) {
+function writeTop(args: FileOutputArgs, numberOfCars: number) {
   const { data, folderPath } = args;
     try {
-        const top5 = data.RACEDATA.CAR.filter((car: Car) => car.POSITION <= 5).sort((a: Car, b: Car) => a.POSITION - b.POSITION).map((car: Car) => {
+      const carTotal = numberOfCars < (data.RACEDATA?.CAR?.length || 0) ? numberOfCars : data.RACEDATA?.CAR?.length;
+        const top = data.RACEDATA.CAR.filter((car: Car) => car.POSITION <= numberOfCars).sort((a: Car, b: Car) => a.POSITION - b.POSITION).map((car: Car) => {
             return `${car.POSITION}) ${car.CARNO}-${car.NAME.split(' ')[1]}`;
         });
 
-        const output = top5.join('\n');
-        const outputPath = path.join(folderPath, 'top5.txt');
+        const output = top.join('\n');
+        const outputPath = path.join(folderPath, `top${carTotal}.txt`);
         console.log(outputPath);
         fs.writeFileSync(outputPath, output);
     }   catch(err) {

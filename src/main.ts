@@ -30,7 +30,7 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   ipcMain.on("start-monitor", (event, args) => {
     xmlPath = args.xmlPath;
