@@ -2,12 +2,28 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
-
+    <title>Scoreboarder</title>
   </head>
   <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
+    <h1>Scorboarder</h1>
+    <div>
+      <p>Select yoru input file and output directory</p>
+    </div>
+    <div>
+      <div>
+        <input type="text" id="xmlpath" placeholder="Enter XML file path" value="" />
+        <button id="selectfile">Select File</button>
+      </div>
+      <div>
+        <input type="text" id="outputfolder" placeholder="Enter output folder" />
+        <button id="selectfolder">Select Folder</button>
+      </div>
+      <div>
+        <button id="startbtn">Start</button>
+        <button id="stopbtn">Stop</button>
+      </div>
+
+  </div>
     <script type="module" src="/src/renderer.ts"></script>
   </body>
 </html>
