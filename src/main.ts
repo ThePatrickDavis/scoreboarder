@@ -42,7 +42,13 @@ const createWindow = () => {
       console.log(`Event type is: ${eventType}`);
       if (filename) {
         console.log(`filename provided: ${filename}`);
-        processXml(xmlPath, folderPath);
+        try {
+          processXml(xmlPath, folderPath);
+          console.log(`Processed XML: ${xmlPath}`);
+        } catch (err) { 
+          console.log(`Error processing XML: ${err}`);
+        }
+        
       } else {
         console.log('filename not provided');
       }
