@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain , dialog } from 'electron';
+import { app, BrowserWindow, ipcMain , dialog, ipcRenderer } from 'electron';
 import path from 'node:path';
 import started from 'electron-squirrel-startup';
 import fs, { FSWatcher } from 'node:fs';
@@ -6,6 +6,7 @@ import { processXml } from './xmlMonitor';
 let watcher: FSWatcher | undefined = undefined;
 let xmlPath: string | undefined = undefined;
 let folderPath: string | undefined = undefined;
+let configPath: string | undefined = undefined;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (started) {
@@ -28,6 +29,28 @@ const createWindow = () => {
   } else {
     mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
   }
+
+
+  // Get path for config file 
+  const userDataPath = app.getPath("userData");
+  configPath = path.join(userDataPath, 'config.json');
+
+  if (!fs.existsSync(configPath)) {
+    fs.writeFileSync(configPath, JSON.stringify({ xmlPath: '', folderPath: '' }));
+    console.log(`Created config file at ${configPath}`);
+  }
+   
+  if (fs.existsSync(configPath)) {
+    const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+    xmlPath = config.xmlPath;
+    folderPath = config.folderPath;
+  }
+
+  // On Renderer loaded
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.send('file-selected', { xmlPath });
+    mainWindow.webContents.send('folder-selected', { folderPath });
+  });
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
@@ -66,7 +89,9 @@ const createWindow = () => {
       });
       if (!result.canceled) {
         console.log(`Setting xmlPath to ${result.filePaths[0]}`);
-        mainWindow.webContents.send('file-selected', { xmlPath: result.filePaths[0] });
+        xmlPath = result.filePaths[0];
+        fs.writeFileSync(configPath, JSON.stringify({ xmlPath, folderPath}));
+        mainWindow.webContents.send('file-selected', { xmlPath: xmlPath });
         return result.filePaths[0];
       }
     } catch (err) {
@@ -79,7 +104,10 @@ const createWindow = () => {
       properties: ['openDirectory'],
     }).then((result) => {
       if (!result.canceled) {
-        mainWindow.webContents.send('folder-selected', { folderPath: result.filePaths[0] });
+        folderPath = result.filePaths[0];
+        console.log(`Setting folderPath to ${folderPath}`);
+        fs.writeFileSync(configPath, JSON.stringify({ xmlPath, folderPath}));
+        mainWindow.webContents.send('folder-selected', { folderPath: folderPath });
       }
     }).catch((err) => {
       console.log(err);

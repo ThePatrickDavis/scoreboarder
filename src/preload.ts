@@ -8,7 +8,9 @@ contextBridge.exposeInMainWorld('raceAPI', {
     startMonitor: ipcRenderer.send,
     stopMonitor: ipcRenderer.send,
     selectFile: ipcRenderer.send,
-    // onFileSelected: (callback: any) => ipcRenderer.on('update-xml-path', (_event, value) => callback(value)),
-    onFileSelected: (callback: any) => ipcRenderer.on('file-selected', (_event, value) => callback(value)),
+    onFileSelected: (callback: any) => {
+        console.log('onFileSelected');
+        ipcRenderer.on('file-selected', (_event, value) => callback(value))
+    },
     onFolderSelected: (callback: any) => ipcRenderer.on('folder-selected', (_event, value) => callback(value)),
 });

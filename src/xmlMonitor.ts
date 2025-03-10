@@ -92,7 +92,7 @@ function writeScroling(args: FileOutputArgs) {
   const { data, folderPath } = args;
     try {
         // console.log(JSON.stringify(data));
-        const all = data.RACEDATA.CAR.filter((a: Car) => a.NAME != 'N/A').sort((a: Car, b: Car) => a.FASTTIME - b.FASTTIME).map((car: Car) => {
+        const all = data.RACEDATA.CAR.filter((a: Car) => a.NAME != 'N/A').sort((a: Car, b: Car) => a.POSITION - b.POSITION).map((car: Car) => {
             return `${car.POSITION}) ${car.CARNO}-${car.NAME.split(' ')[1]}`;
         });
 

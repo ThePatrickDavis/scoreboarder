@@ -82,6 +82,7 @@ selectFolder.addEventListener("click", () => {
 });
 
 export function setXmlPath(path: string) {
+  console.log('setXmlPath', path);
   xmlPath.value = path;
 }
 
@@ -90,7 +91,8 @@ export function setFolderPath(path: string) {
 }
 
 window.raceAPI.onFileSelected((value: any) => {
-  console.log(value);
+
+  console.log('onFileSelected', value);
   setXmlPath(value.xmlPath);
 });
 
