@@ -74,6 +74,7 @@ function writeQualifying(args: FileOutputArgs) {
 function writeQuickTime(args: FileOutputArgs) {
   const { data, folderPath } = args;
     try {
+        // console.log(JSON.stringify(data));
         const top5 = data.RACEDATA.CAR.filter((a: Car) => a.FASTTIME && !isNaN(a.FASTTIME)).sort((a: Car, b: Car) => a.FASTTIME - b.FASTTIME).slice(0, 1).map((car: Car) => {
             return `QT ${car.CARNO}-${car.NAME.split(' ')[1]} (${car.FASTTIME.toFixed(3)})`;
         });
@@ -91,7 +92,7 @@ function writeScroling(args: FileOutputArgs) {
   const { data, folderPath } = args;
     try {
         // console.log(JSON.stringify(data));
-        const all = data.RACEDATA.CAR.filter((a: Car) => a.NAME != 'N/A').sort((a: Car, b: Car) => a.POSITION - b.POSITION).map((car: Car) => {
+        const all = data.RACEDATA.CAR.filter((a: Car) => a.NAME != 'N/A').sort((a: Car, b: Car) => a.FASTTIME - b.FASTTIME).map((car: Car) => {
             return `${car.POSITION}) ${car.CARNO}-${car.NAME.split(' ')[1]}`;
         });
 
